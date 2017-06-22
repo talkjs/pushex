@@ -16,6 +16,7 @@ defmodule Pushex.APNS.App do
     :env,
     :cert,
     :feedback_interval,
+    :timeout,
     :cert_password,
     :key,
     :keyfile,

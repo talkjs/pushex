@@ -33,7 +33,7 @@ defmodule Pushex.Mixfile do
      {:poison,    "~> 1.5 or ~> 2.1 or ~> 3.0"},
      {:poolboy,   "~> 1.5"},
      {:vex,       "~> 0.5"},
-     {:apns,      "~> 0.9.4"},
+     {:apns,      git: "https://github.com/chvanikoff/apns4ex.git"},
      {:excoveralls, "~> 0.5", only: :test},
      {:dialyxir, "~> 0.3", only: :dev},
      {:earmark,   "~> 1.0", only: :dev},

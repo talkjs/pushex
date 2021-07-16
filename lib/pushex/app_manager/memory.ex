@@ -6,7 +6,7 @@ defmodule Pushex.AppManager.Memory do
 
   @behaviour Pushex.AppManager
 
-  @valid_platforms ~w(gcm apns)a
+  @valid_platforms ~w(gcm)a
 
   def start(apps \\ []) do
     GenServer.start(__MODULE__, apps, name: __MODULE__)

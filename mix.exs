@@ -6,7 +6,7 @@ defmodule Pushex.Mixfile do
   def project do
     [app: :pushex,
      version: @version,
-     elixir: "~> 1.2",
+     elixir: "~> 1.12",
      elixirc_paths: elixirc_paths(Mix.env),
      description: "Mobile push notification library",
      source_url: "https://github.com/tuvistavie/pushex",
@@ -20,7 +20,7 @@ defmodule Pushex.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :httpoison, :vex, :poolboy, :apns],
+    [applications: [:logger, :httpoison, :vex, :poolboy],
      mod: {Pushex.App, []},
      description: 'Mobile push notification library']
   end
@@ -33,7 +33,6 @@ defmodule Pushex.Mixfile do
      {:poison,    "~> 1.5 or ~> 2.1 or ~> 3.0"},
      {:poolboy,   "~> 1.5"},
      {:vex,       "~> 0.5"},
-     {:apns,      git: "https://github.com/chvanikoff/apns4ex.git"},
      {:excoveralls, "~> 0.5", only: :test},
      {:dialyxir, "~> 0.3", only: :dev},
      {:earmark,   "~> 1.0", only: :dev},

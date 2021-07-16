@@ -29,12 +29,9 @@ defmodule Pushex.Helpers do
       request = %Pushex.GCM.Request{app: app, notification: notification, to: reg_id}
       Pushex.send_notification(request)
   """
-  @spec send_notification(Pushex.GCM.request | Pushex.APNS.request | map, Keyword.t) :: reference
+  @spec send_notification(Pushex.GCM.request | map, Keyword.t) :: reference
   def send_notification(request, opts \\ [])
   def send_notification(%Pushex.GCM.Request{} = request, _opts) do
-    Pushex.Worker.send_notification(request)
-  end
-  def send_notification(%Pushex.APNS.Request{} = request, _opts) do
     Pushex.Worker.send_notification(request)
   end
   def send_notification(notification, opts) do
@@ -43,16 +40,16 @@ defmodule Pushex.Helpers do
     else
       case Keyword.get(opts, :with_app) do
         %Pushex.GCM.App{}  -> do_send_notification(notification, :gcm, opts)
-        %Pushex.APNS.App{} -> do_send_notification(notification, :apns, opts)
-        _                  -> raise ArgumentError, ":with_app must be a `Pushex.GCM.App` or `Pushex.APNS.App` when :using is not passed"
+
+        _                  -> raise ArgumentError, ":with_app must be a `Pushex.GCM.App`  when :using is not passed"
       end
     end
   end
 
-  defp do_send_notification(notification, platform, opts) when platform in ["gcm", "apns"] do
+  defp do_send_notification(notification, platform, opts) when platform in ["gcm"] do
     do_send_notification(notification, String.to_atom(platform), opts)
   end
-  defp do_send_notification(notification, platform, opts) when platform in [:gcm, :apns] do
+  defp do_send_notification(notification, platform, opts) when platform in [:gcm] do
     {app, opts} = Keyword.pop(opts, :with_app)
     app = fetch_app(platform, app || default_app(platform))
 
@@ -72,7 +69,6 @@ defmodule Pushex.Helpers do
     """
   end
   defp fetch_app(_platform, %Pushex.GCM.App{} = app), do: app
-  defp fetch_app(_platform, %Pushex.APNS.App{} = app), do: app
   defp fetch_app(platform, app_name) when is_binary(app_name) or is_atom(app_name) do
     case Pushex.AppManager.find_app(platform, app_name) do
       nil -> raise Pushex.AppNotFoundError, platform: platform, name: app_name
@@ -83,11 +79,9 @@ defmodule Pushex.Helpers do
   defp make_request(notification, %Pushex.GCM.App{} = app, opts) do
     Pushex.GCM.Request.create!(notification, app, opts)
   end
-  defp make_request(notification, %Pushex.APNS.App{} = app, opts) do
-    Pushex.APNS.Request.create!(notification, app, opts)
-  end
+
   defp make_request(_notification, app, _opts) do
-    raise ArgumentError, "application must be Pushex.GCM.App or Pushex.APNS.app, got #{inspect(app)}"
+    raise ArgumentError, "application must be Pushex.GCM.App, got #{inspect(app)}"
   end
 
   defp default_app(platform) do

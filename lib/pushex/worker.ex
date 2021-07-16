@@ -11,13 +11,10 @@ defmodule Pushex.Worker do
   @doc """
   Sends a notification asynchronously using the implementation defined in the configuration
   """
-  @spec send_notification(Pushex.GCM.request | Pushex.APNS.request, reference) :: reference
+  @spec send_notification(Pushex.GCM.request, reference) :: reference
   def send_notification(request, ref \\ make_ref())
   def send_notification(%Pushex.GCM.Request{} = request, ref) do
     do_send_notification_async(Pushex.GCM, request, ref)
-  end
-  def send_notification(%Pushex.APNS.Request{} = request, ref) do
-    do_send_notification_async(Pushex.APNS, request, ref)
   end
 
   defp do_send_notification_async(module, request, ref) do
